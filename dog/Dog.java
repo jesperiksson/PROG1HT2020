@@ -45,7 +45,7 @@ class Dog {
 	}
 	public String toString(){
 		return String.format(
-			"Name: %s, Breed: %s, Age: %d, Weight: %d, Tail length: $%.1f",
+			"Name: %s, Breed: %s, Age: %d, Weight: %d, Tail length: %.1f",
 			this.name, this.breed, this.age, this.weight, this.tail);
 	}
 	public boolean isInArray(String[] arr, String targetValue) {
