@@ -22,8 +22,19 @@ public class DogTest {
 		fido3.increaseAge();
 		System.out.println(fido3);
 
+		/*
 		Assignment assignment = new Assignment();
 		assignment.registerNewDog();
-		System.out.println(assignment.getDogs());
+		System.out.print(assignment.getDogs());
+		assignment.registerNewDog();
+		*/
+
+		Assignment assignment = new Assignment();
+		assignment.registerNewDog(new Dog("fido1","schäfer",2,40));
+
+		assignment.registerNewDog(new Dog("fido2","pudel",5,13));
+		assignment.registerNewDog(new Dog("fido3","tax",6,5));
+		assignment.registerNewDog(new Dog("fido4","shi tzu",11,4));
+		//System.out.println(Assignment.listDogs());
 	}
 }

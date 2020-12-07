@@ -11,7 +11,7 @@ public class Assignment {
 	 * så det är viktigt att namnen stämmer.
 	 */
 	public static final String REGISTER_NEW_DOG_METHOD = "registerNewDog"; // U7.1
-	public static final String LIST_DOGS_METHOD = ""; // U7.2 och U8.4
+	public static final String LIST_DOGS_METHOD = "listDogs"; // U7.2 och U8.4
 	public static final String FIND_DOG_METHOD = ""; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String INCREASE_AGE_METHOD = ""; // U7.4
 	public static final String REMOVE_DOG_METHOD = ""; // U7.5, U8.6 och U9.6
@@ -35,6 +35,7 @@ public class Assignment {
 	 * metod.
 	 ********************************************************************************/
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
+	/*
 	public void registerNewDog(){
 		Input input = new Input();
 		Scanner registrationScanner = new Scanner(System.in);
@@ -46,6 +47,18 @@ public class Assignment {
 		Dog dog = new Dog(name, breed, age, weight);
 		System.out.println(dog);
 		addDog(dog);
+		input.close();
+	}
+	*/
+	public void registerNewDog(Dog dog){
+		addDog(dog);
+	}
+	public void listDogs(){
+		Input input = new Input();
+		Scanner tailScanner = new Scanner(System.in);
+		double minTailLength = Input.convertToDouble(Input.prompt("Smallest tail length to display",tailScanner));
+		input.close();
+		return minTailLength;
 	}
 	/*
 	private int convertToInt(String ageString){
@@ -74,9 +87,9 @@ public class Assignment {
 	 * 
 	 * Behövs från U7.5, eventuellt tidigare
 	 */
-	public void waitForUserInput() {
+	public void waitForUserInput(Scanner scanner) {
 		// Ersätt raden nedan med NAMNPÅSCANNER.nextLine() eller motsvarande anrop på din egen klass
-		throw new RuntimeException("Assignment.waitForUserInput är inte implementerad");
+		return scanner.nextLine(); // Används ej
 	}
 
 	/*
