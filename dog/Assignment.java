@@ -35,11 +35,10 @@ public class Assignment {
 	 * metod.
 	 ********************************************************************************/
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
-	/*
+	Scanner registrationScanner = new Scanner(System.in);
 	public void registerNewDog(){
 		Input input = new Input();
-		Scanner registrationScanner = new Scanner(System.in);
-		String name = input.prompt("Name", registrationScanner);
+		String name = input.prompt("\nName", registrationScanner);
 		String breed = input.prompt("Breed", registrationScanner);
 		int age = input.convertToInt(input.prompt("Age", registrationScanner));
 		int weight = input.convertToInt(input.prompt("Weight", registrationScanner));
@@ -47,18 +46,38 @@ public class Assignment {
 		Dog dog = new Dog(name, breed, age, weight);
 		System.out.println(dog);
 		addDog(dog);
-		input.close();
 	}
-	*/
 	public void registerNewDog(Dog dog){
 		addDog(dog);
 	}
 	public void listDogs(){
 		Input input = new Input();
-		Scanner tailScanner = new Scanner(System.in);
-		double minTailLength = Input.convertToDouble(Input.prompt("Smallest tail length to display",tailScanner));
-		input.close();
-		return minTailLength;
+		boolean atLeastOne = false;
+		if (dogs.size()>0){
+			double minTailLength = input.convertToDouble(
+					input.prompt(
+						"Smallest tail length to display",
+						registrationScanner));
+			System.out.println("The following dogs has such a large tail:");
+			for (int i = 0; i<dogs.size(); i++) {
+				if (dogs.get(i).getTailLength() >= minTailLength) {
+					atLeastOne = true;
+					System.out.print(String.format("*%s ",dogs.get(i).getName()));
+					System.out.print(String.format("(%s, ",dogs.get(i).getBreed()));
+					System.out.print(String.format("%d years, ",dogs.get(i).getAge()));
+					System.out.print(String.format("%d kilo, ",dogs.get(i).getWeight()));
+					System.out.print(String.format("%.2f cm tail)\n",dogs.get(i).getTailLength()));
+				} 
+			}
+			if (!atLeastOne) {
+				System.out.println(
+						String.format(
+							"Error: No dogs with a tail of at least %.1f cm",
+							minTailLength));
+			}
+		} else {
+			System.out.println("Error: no dog in register");
+		}
 	}
 	/*
 	private int convertToInt(String ageString){
@@ -89,7 +108,7 @@ public class Assignment {
 	 */
 	public void waitForUserInput(Scanner scanner) {
 		// Ersätt raden nedan med NAMNPÅSCANNER.nextLine() eller motsvarande anrop på din egen klass
-		return scanner.nextLine(); // Används ej
+		scanner.nextLine(); // Används ej
 	}
 
 	/*
