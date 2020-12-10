@@ -12,7 +12,7 @@ public class Assignment {
 	 */
 	public static final String REGISTER_NEW_DOG_METHOD = "registerNewDog"; // U7.1
 	public static final String LIST_DOGS_METHOD = "listDogs"; // U7.2 och U8.4
-	public static final String FIND_DOG_METHOD = ""; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
+	public static final String FIND_DOG_METHOD = "findDog"; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String INCREASE_AGE_METHOD = ""; // U7.4
 	public static final String REMOVE_DOG_METHOD = ""; // U7.5, U8.6 och U9.6
 	public static final String SORT_DOGS_METHOD = ""; // U7.6
@@ -34,8 +34,8 @@ public class Assignment {
 	 * fil(er) i samtliga inlämningar, så du behöver inte börja om för varje ny
 	 * metod.
 	 ********************************************************************************/
+	private Scanner registrationScanner = new Scanner(System.in);
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
-	Scanner registrationScanner = new Scanner(System.in);
 	public void registerNewDog(){
 		Input input = new Input();
 		String name = input.prompt("\nName", registrationScanner);
@@ -79,22 +79,18 @@ public class Assignment {
 			System.out.println("Error: no dog in register");
 		}
 	}
-	/*
-	private int convertToInt(String ageString){
-		return Integer.parseInt(ageString);
+	public Dog findDog(String name) {
+		boolean atLeastOne = false;
+		if (dogs.size()>0){
+			atLeastOne = true;
+			for (int i = 0; i<dogs.size();i++){
+				if (dogs.get(i).getName()==name){
+					return dogs.get(i);
+				}
+			}	
+		 
+		return null;
 	}
-
-	private String prompt(String question, Scanner registrationScanner){
-		System.out.print(String.format("%s?> ",question));
-		return registrationScanner.nextLine(); 
-	}
-	*/
-	/*
-	 * Metoderna nedan är till för att testprogrammet ska sätta upp och kontrollera
-	 * olika saker. De är INTE tänkta att användas i din egen kod. Du måste fylla i
-	 * den saknade koden i metoderna allteftersom de behövs av testprogrammet.
-	 */
-
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
 	 * på return. Du gör detta genom att anropa nextLine-metoden på din scanner.

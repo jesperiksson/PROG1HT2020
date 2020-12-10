@@ -23,9 +23,9 @@ public class DogTest {
 		System.out.println(fido3);
 
 		Assignment assignment = new Assignment();
-		assignment.registerNewDog();
+		//assignment.registerNewDog();
 		//System.out.print(assignment.getDogs());
-		assignment.registerNewDog();
+		//assignment.registerNewDog();
 
 		//Assignment assignment = new Assignment();
 		assignment.registerNewDog(new Dog("fido1","schäfer",2,40));
@@ -35,7 +35,14 @@ public class DogTest {
 		assignment.registerNewDog(new Dog("fido4","shi tzu",11,4));
 		assignment.listDogs();
 
+		System.out.println(assignment.findDog("fido2"));
+
 		Assignment fail = new Assignment();
 		fail.listDogs();
+		System.out.println(fail.findDog("q"));
+		fail.registerNewDog(new Dog("fido10","rottweiler",1,50));
+		System.out.println(fail.findDog("fido9"));
+		fail.registerNewDog(new Dog("fido9","rottweiler",21,51));
+		System.out.println(fail.findDog("fido9"));
 	}
 }
