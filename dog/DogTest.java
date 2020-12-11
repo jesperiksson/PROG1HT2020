@@ -38,11 +38,13 @@ public class DogTest {
 		System.out.println(assignment.findDog("fido2"));
 
 		Assignment fail = new Assignment();
-		fail.listDogs();
+		//fail.listDogs();
 		System.out.println(fail.findDog("q"));
 		fail.registerNewDog(new Dog("fido10","rottweiler",1,50));
 		System.out.println(fail.findDog("fido9"));
 		fail.registerNewDog(new Dog("fido9","rottweiler",21,51));
 		System.out.println(fail.findDog("fido9"));
+
+		assignment.increaseAge();
 	}
 }

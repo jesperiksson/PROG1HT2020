@@ -13,7 +13,7 @@ public class Assignment {
 	public static final String REGISTER_NEW_DOG_METHOD = "registerNewDog"; // U7.1
 	public static final String LIST_DOGS_METHOD = "listDogs"; // U7.2 och U8.4
 	public static final String FIND_DOG_METHOD = "findDog"; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
-	public static final String INCREASE_AGE_METHOD = ""; // U7.4
+	public static final String INCREASE_AGE_METHOD = "increaseAge"; // U7.4
 	public static final String REMOVE_DOG_METHOD = ""; // U7.5, U8.6 och U9.6
 	public static final String SORT_DOGS_METHOD = ""; // U7.6
 	public static final String REGISTER_NEW_OWNER_METHOD = ""; // U8.1
@@ -36,8 +36,8 @@ public class Assignment {
 	 ********************************************************************************/
 	private Scanner registrationScanner = new Scanner(System.in);
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
+	private Input input = new Input();
 	public void registerNewDog(){
-		Input input = new Input();
 		String name = input.prompt("\nName", registrationScanner);
 		String breed = input.prompt("Breed", registrationScanner);
 		int age = input.convertToInt(input.prompt("Age", registrationScanner));
@@ -84,12 +84,22 @@ public class Assignment {
 		if (dogs.size()>0){
 			atLeastOne = true;
 			for (int i = 0; i<dogs.size();i++){
-				if (dogs.get(i).getName()==name){
+				if (dogs.get(i).getName().equalsIgnoreCase(name)){
 					return dogs.get(i);
 				}
 			}	
-		 
+		} 
 		return null;
+	}
+	public void increaseAge() {
+		String name = input.prompt("Enter the name of the dog",registrationScanner);
+		Dog dog = findDog(name);
+		if (dog == null){
+			System.out.println(String.format("Error: no dog named %s",name));
+		} else {	
+			dog.increaseAge();
+			System.out.println(String.format("%s is now one year older",name));
+		}
 	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
