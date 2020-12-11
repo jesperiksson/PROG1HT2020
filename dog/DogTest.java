@@ -1,6 +1,7 @@
 package dog;
 public class DogTest {
 	public static void main(String[] args){
+		/*
 		Dog fido = new Dog("Fido", "tax", 3, 3);	
 		System.out.println(fido);
 		fido.increaseAge();
@@ -21,6 +22,7 @@ public class DogTest {
 		System.out.println(fido3);
 		fido3.increaseAge();
 		System.out.println(fido3);
+		*/
 
 		Assignment assignment = new Assignment();
 		//assignment.registerNewDog();
@@ -33,10 +35,10 @@ public class DogTest {
 		assignment.registerNewDog(new Dog("fido2","pudel",5,13));
 		assignment.registerNewDog(new Dog("fido3","tax",6,5));
 		assignment.registerNewDog(new Dog("fido4","shi tzu",11,4));
-		assignment.listDogs();
+		//assignment.listDogs();
 
 		System.out.println(assignment.findDog("fido2"));
-
+		/*
 		Assignment fail = new Assignment();
 		//fail.listDogs();
 		System.out.println(fail.findDog("q"));
@@ -44,7 +46,16 @@ public class DogTest {
 		System.out.println(fail.findDog("fido9"));
 		fail.registerNewDog(new Dog("fido9","rottweiler",21,51));
 		System.out.println(fail.findDog("fido9"));
+		*/
 
-		assignment.increaseAge();
+		//assignment.increaseAge();
+		assignment.removeDog();
+		assignment.listDogs();
+		assignment.removeDog();
+		assignment.listDogs();
+		assignment.removeDog();
+		assignment.listDogs();
+		assignment.removeDog();
+		assignment.listDogs();
 	}
 }

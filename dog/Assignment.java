@@ -14,7 +14,7 @@ public class Assignment {
 	public static final String LIST_DOGS_METHOD = "listDogs"; // U7.2 och U8.4
 	public static final String FIND_DOG_METHOD = "findDog"; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String INCREASE_AGE_METHOD = "increaseAge"; // U7.4
-	public static final String REMOVE_DOG_METHOD = ""; // U7.5, U8.6 och U9.6
+	public static final String REMOVE_DOG_METHOD = "removeDog"; // U7.5, U8.6 och U9.6
 	public static final String SORT_DOGS_METHOD = ""; // U7.6
 	public static final String REGISTER_NEW_OWNER_METHOD = ""; // U8.1
 	public static final String FIND_OWNER_METHOD = ""; // U8.2 - hjälpmetod tänkt att användas i de följande stegen
@@ -80,9 +80,7 @@ public class Assignment {
 		}
 	}
 	public Dog findDog(String name) {
-		boolean atLeastOne = false;
 		if (dogs.size()>0){
-			atLeastOne = true;
 			for (int i = 0; i<dogs.size();i++){
 				if (dogs.get(i).getName().equalsIgnoreCase(name)){
 					return dogs.get(i);
@@ -101,6 +99,26 @@ public class Assignment {
 			System.out.println(String.format("%s is now one year older",name));
 		}
 	}
+	public int findDogIndex(String name){
+		if (dogs.size()>0){
+			for (int i = 0; i<dogs.size();i++){
+				if (dogs.get(i).getName().equalsIgnoreCase(name)){
+					return i;
+				}
+			}	
+		} 
+		return dogs.size()+1;
+	}
+	public void removeDog() {
+		String name = input.prompt("Enter the name of the dog to remove",registrationScanner);
+		int index = findDogIndex(name);
+		if (index>dogs.size()) {
+			System.out.println(String.format("Error: no dog named %s",name));
+		} else {
+			dogs.remove(index);
+			System.out.println(String.format("%s is removed from the register",name));
+		}
+	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
 	 * på return. Du gör detta genom att anropa nextLine-metoden på din scanner.
@@ -112,9 +130,9 @@ public class Assignment {
 	 * 
 	 * Behövs från U7.5, eventuellt tidigare
 	 */
-	public void waitForUserInput(Scanner scanner) {
+	public String waitForUserInput() {
 		// Ersätt raden nedan med NAMNPÅSCANNER.nextLine() eller motsvarande anrop på din egen klass
-		scanner.nextLine(); // Används ej
+		input.waitForEnter(registrationScanner);
 	}
 
 	/*

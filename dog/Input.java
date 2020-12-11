@@ -15,6 +15,9 @@ public class Input{
 		stringDouble = stringDouble.replaceAll(",",".");
 		return Double.parseDouble(stringDouble);
 	}
+	public void waitForEnter(Scanner scanner) {
+		scanner.nextLine();
+	}
 
 
 }
