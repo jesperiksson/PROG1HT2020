@@ -1,4 +1,6 @@
 package dog;
+import java.util.ArrayList;
+import java.util.Arrays;
 public class DogTest {
 	public static void main(String[] args){
 		/*
@@ -30,14 +32,18 @@ public class DogTest {
 		//assignment.registerNewDog();
 
 		//Assignment assignment = new Assignment();
+		assignment.registerNewDog(new Dog("fido6","shi tzu",17,73));
+		assignment.registerNewDog(new Dog("fidof","shi tzu",13,5));
+		assignment.registerNewDog(new Dog("fidod","pudel",5,13));
+		assignment.registerNewDog(new Dog("fidoc","tax",6,5));
+		assignment.registerNewDog(new Dog("fidob","tax",6,5));
+		assignment.registerNewDog(new Dog("fidoa","tax",6,5));
+		assignment.registerNewDog(new Dog("fidoe","shi tzu",13,5));
 		assignment.registerNewDog(new Dog("fido1","schäfer",2,40));
-
-		assignment.registerNewDog(new Dog("fido2","pudel",5,13));
-		assignment.registerNewDog(new Dog("fido3","tax",6,5));
 		assignment.registerNewDog(new Dog("fido4","shi tzu",11,4));
 		//assignment.listDogs();
 
-		System.out.println(assignment.findDog("fido2"));
+		//System.out.println(assignment.findDog("fido2"));
 		/*
 		Assignment fail = new Assignment();
 		//fail.listDogs();
@@ -49,6 +55,7 @@ public class DogTest {
 		*/
 
 		//assignment.increaseAge();
+		/*
 		assignment.removeDog();
 		assignment.listDogs();
 		assignment.removeDog();
@@ -57,5 +64,10 @@ public class DogTest {
 		assignment.listDogs();
 		assignment.removeDog();
 		assignment.listDogs();
+		*/
+		ArrayList<Dog> dogs = assignment.sortDogs();
+		for (int i = 0;i<dogs.size();i++){
+			System.out.println(dogs.get(i));
+		}
 	}
 }

@@ -15,7 +15,7 @@ public class Assignment {
 	public static final String FIND_DOG_METHOD = "findDog"; // U7.3 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String INCREASE_AGE_METHOD = "increaseAge"; // U7.4
 	public static final String REMOVE_DOG_METHOD = "removeDog"; // U7.5, U8.6 och U9.6
-	public static final String SORT_DOGS_METHOD = ""; // U7.6
+	public static final String SORT_DOGS_METHOD = "sortDogs"; // U7.6
 	public static final String REGISTER_NEW_OWNER_METHOD = ""; // U8.1
 	public static final String FIND_OWNER_METHOD = ""; // U8.2 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String GIVE_DOG_METHOD = ""; // U8.3 och framåt
@@ -119,6 +119,82 @@ public class Assignment {
 			System.out.println(String.format("%s is removed from the register",name));
 		}
 	}
+	public void sortDogsPrint(){ // För debug
+		for (int i = 1; i<dogs.size(); i++) {
+			// Välj den hund som ska flyttas
+			Dog dog = dogs.get(i);
+			double tailLength = dog.getTailLength();
+			// Börja räkna ifrån den hundens position
+			int j  = i - 1;
+			// Om listan inte är slut och hunden bakom har längre svans
+			while (j >= 0 && dogs.get(j).getTailLength() > tailLength){
+				// Flytta bak hunden med större svans
+				dogs.set(j+1, dogs.get(j));
+				// Gå ett steg år höger
+				j = j - 1;
+			}
+			// Placera hunden som skulle flyttas på rätt plats
+			dogs.set(j+1,dog);
+		}
+		for (int i = 0; i<dogs.size();i++){
+			System.out.println(dogs.get(i));
+		}
+		
+	}
+	// InsertionSort, informationen hittade jag här: https://www.geeksforgeeks.org/insertion-sort/
+	public ArrayList<Dog> sortDogs(){
+		ArrayList<Dog> sortedDogs = new ArrayList<>(dogs);
+		for (int i = 1; i<sortedDogs.size(); i++) {
+			// Välj den hund som ska flyttas
+			Dog dog = sortedDogs.get(i);
+			// Börja räkna ifrån den hundens position
+			int j  = i - 1;
+			// Om listan inte är slut och hunden bakom har längre svans
+			while (j >= 0 && sortedDogs.get(j).getTailLength() > dog.getTailLength()){
+				// Flytta bak hunden med större svans
+				sortedDogs.set(j+1, sortedDogs.get(j));
+				// Gå ett steg år höger
+				j--;
+			}
+			// Placera hunden som skulle flyttas på rätt plats
+			sortedDogs.set(j+1,dog);
+		}
+		ArrayList<Dog> doubleSortedDogs = sortDogsByName(sortedDogs);
+		return doubleSortedDogs;
+	}
+	private ArrayList<Dog> sortDogsByName(ArrayList<Dog> list){
+	
+		// Sortera hundar med samma svanslängd på namn
+		for (int i = 1; i<list.size();i++){
+			// Åtminstone två hundar har samma svanslängd x
+			if (list.get(i-1).getTailLength()== list.get(i).getTailLength()) { 
+				int j = 1;
+				while (list.get(i).getTailLength() == list.get(i+j).getTailLength()){
+					j++; // j är antalet hunder med svanslängd x
+				}
+				for (int k = i;k<i+j;k++){
+					// Välj hund som ska flyttas
+					Dog dog = list.get(k);
+					int l = k-1;
+					// Samma procedur som innan
+					while (l>=0 && compareAlphabetically(list.get(l).getName(),dog.getName())){
+						list.set(l+1, list.get(l));
+						l--;			
+					}
+					list.set(l+1,dog);	
+				}
+				i = i + j; // Hoppa över redan sorterade hundar
+			}
+		}
+		return list;
+	}
+	private boolean compareAlphabetically(String s1, String s2){
+		if (s1.compareTo(s2)>0){ // Ger positivt om s2 ligger före s1 alfabetiskt
+			return true; // dvs, byt plats på dem 
+		} else { // Annars, 
+			return false; // Gör ingenting
+		}
+	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
 	 * på return. Du gör detta genom att anropa nextLine-metoden på din scanner.
@@ -132,7 +208,7 @@ public class Assignment {
 	 */
 	public String waitForUserInput() {
 		// Ersätt raden nedan med NAMNPÅSCANNER.nextLine() eller motsvarande anrop på din egen klass
-		input.waitForEnter(registrationScanner);
+		return input.waitForEnter(registrationScanner);
 	}
 
 	/*
