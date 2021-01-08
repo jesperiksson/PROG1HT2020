@@ -6,10 +6,11 @@ class Dog {
 	private int age;
 	private int weight;	
 	private double tail;
-	private String[] taxAlias = {"tax", "dachshund",
-						"mäyräkoira","teckel"};
+	private Owner owner;
+	private String[] taxAlias = {"tax", "dachshund","mäyräkoira","teckel"};
+	private boolean hasOwner = false;
 
-	public Dog(String name, String breed, int age, int weight){
+	Dog(String name, String breed, int age, int weight){
 		this.name = name;
 		this.breed = breed;
 		this.age = age;
@@ -43,6 +44,9 @@ class Dog {
 	public double getTailLength(){
 		return this.tail;
 	}
+	public boolean getHasOwner(){
+		return this.hasOwner;
+	}
 	public String toString(){
 		return String.format(
 			"Name: %s, Breed: %s, Age: %d, Weight: %d, Tail length: %.1f",
@@ -54,6 +58,13 @@ class Dog {
 				return true;
 		}
 		return false;
+	}
+	public void addOwner(Owner owner){
+		if (!this.hasOwner){
+			this.owner = owner;
+			this.hasOwner = true;
+			owner.addDog(this);
+		}
 	}
 }
 

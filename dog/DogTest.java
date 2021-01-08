@@ -33,7 +33,7 @@ public class DogTest {
 
 		//Assignment assignment = new Assignment();
 		assignment.registerNewDog(new Dog("fido6","shi tzu",17,73));
-		assignment.registerNewDog(new Dog("fidof","shi tzu",13,5));
+		assignment.registerNewDog(new Dog("f","shi tzu",13,5));
 		assignment.registerNewDog(new Dog("fidod","pudel",5,13));
 		assignment.registerNewDog(new Dog("fidoc","tax",6,5));
 		assignment.registerNewDog(new Dog("fidob","tax",6,5));
@@ -65,9 +65,16 @@ public class DogTest {
 		assignment.removeDog();
 		assignment.listDogs();
 		*/
-		ArrayList<Dog> dogs = assignment.sortDogs();
-		for (int i = 0;i<dogs.size();i++){
-			System.out.println(dogs.get(i));
-		}
+		//ArrayList<Dog> dogs = assignment.sortDogs();
+		//assignment.listDogs();
+
+		assignment.registerNewOwner(new Owner("Husse1"));	
+		assignment.registerNewOwner(new Owner("Husse2"));	
+		assignment.registerNewOwner(new Owner("Husse3"));	
+		assignment.registerNewOwner(new Owner("h"));	
+		assignment.giveDog();
+		assignment.giveDog();
+
+
 	}
 }

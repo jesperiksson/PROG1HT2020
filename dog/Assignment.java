@@ -16,9 +16,9 @@ public class Assignment {
 	public static final String INCREASE_AGE_METHOD = "increaseAge"; // U7.4
 	public static final String REMOVE_DOG_METHOD = "removeDog"; // U7.5, U8.6 och U9.6
 	public static final String SORT_DOGS_METHOD = "sortDogs"; // U7.6
-	public static final String REGISTER_NEW_OWNER_METHOD = ""; // U8.1
-	public static final String FIND_OWNER_METHOD = ""; // U8.2 - hjälpmetod tänkt att användas i de följande stegen
-	public static final String GIVE_DOG_METHOD = ""; // U8.3 och framåt
+	public static final String REGISTER_NEW_OWNER_METHOD = "registerNewOwner"; // U8.1
+	public static final String FIND_OWNER_METHOD = "findOwner"; // U8.2 - hjälpmetod tänkt att användas i de följande stegen
+	public static final String GIVE_DOG_METHOD = "giveDog"; // U8.3 och framåt
 	public static final String LIST_OWNERS_METHOD = ""; // U8.4
 	public static final String OWNER_OF_DOG_METHOD = ""; // U8.5, obs! metoden ska ligga i Owner-klassen
 	public static final String REMOVE_OWNER_METHOD = ""; // U8.7 och U9.6
@@ -36,6 +36,7 @@ public class Assignment {
 	 ********************************************************************************/
 	private Scanner registrationScanner = new Scanner(System.in);
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
+	private ArrayList<Owner> owners = new ArrayList<Owner>();
 	private Input input = new Input();
 	public void registerNewDog(){
 		String name = input.prompt("\nName", registrationScanner);
@@ -47,7 +48,7 @@ public class Assignment {
 		System.out.println(dog);
 		addDog(dog);
 	}
-	public void registerNewDog(Dog dog){
+	public void registerNewDog(Dog dog){ // För att slippa inmatning under testning
 		addDog(dog);
 	}
 	public void listDogs(){
@@ -76,30 +77,35 @@ public class Assignment {
 							minTailLength));
 			}
 		} else {
-			System.out.println("Error: no dog in register");
+			System.out.println("Error: No dogs in list");
 		}
 	}
-	public Dog findDog(String name) {
-		if (dogs.size()>0){
-			for (int i = 0; i<dogs.size();i++){
-				if (dogs.get(i).getName().equalsIgnoreCase(name)){
-					return dogs.get(i);
-				}
-			}	
-		} 
+	private Dog findDog() {
+		String name = input.prompt("Enter the name of the dog",registrationScanner);
+		for (int i = 0; i<dogs.size();i++){
+			if (dogs.get(i).getName().equalsIgnoreCase(name)){
+				return dogs.get(i);
+			}
+		}
+		noSuchDog(name); // Ger användare en chans till	
 		return null;
 	}
+	private void noSuchDog(String name){
+		System.out.println(String.format("Error: no dog named %s",name));
+	}
+	private void noDogs(){
+		System.out.println("Error: No dogs in list");
+	}
 	public void increaseAge() {
-		String name = input.prompt("Enter the name of the dog",registrationScanner);
-		Dog dog = findDog(name);
-		if (dog == null){
-			System.out.println(String.format("Error: no dog named %s",name));
-		} else {	
+		if (dogs.size()>0) {
+			Dog dog = findDog();
 			dog.increaseAge();
-			System.out.println(String.format("%s is now one year older",name));
+			System.out.println(String.format("%s is now one year older",dog.getName()));
+		} else {
+			noDogs();
 		}
 	}
-	public int findDogIndex(String name){
+	private int findDogIndex(String name){ // Letar upp index för hunden 
 		if (dogs.size()>0){
 			for (int i = 0; i<dogs.size();i++){
 				if (dogs.get(i).getName().equalsIgnoreCase(name)){
@@ -118,28 +124,6 @@ public class Assignment {
 			dogs.remove(index);
 			System.out.println(String.format("%s is removed from the register",name));
 		}
-	}
-	public void sortDogsPrint(){ // För debug
-		for (int i = 1; i<dogs.size(); i++) {
-			// Välj den hund som ska flyttas
-			Dog dog = dogs.get(i);
-			double tailLength = dog.getTailLength();
-			// Börja räkna ifrån den hundens position
-			int j  = i - 1;
-			// Om listan inte är slut och hunden bakom har längre svans
-			while (j >= 0 && dogs.get(j).getTailLength() > tailLength){
-				// Flytta bak hunden med större svans
-				dogs.set(j+1, dogs.get(j));
-				// Gå ett steg år höger
-				j = j - 1;
-			}
-			// Placera hunden som skulle flyttas på rätt plats
-			dogs.set(j+1,dog);
-		}
-		for (int i = 0; i<dogs.size();i++){
-			System.out.println(dogs.get(i));
-		}
-		
 	}
 	// InsertionSort, informationen hittade jag här: https://www.geeksforgeeks.org/insertion-sort/
 	public ArrayList<Dog> sortDogs(){
@@ -188,11 +172,47 @@ public class Assignment {
 		}
 		return list;
 	}
-	private boolean compareAlphabetically(String s1, String s2){
-		if (s1.compareTo(s2)>0){ // Ger positivt om s2 ligger före s1 alfabetiskt
+	private boolean compareAlphabetically(String stringOne, String stringTwo){
+		if (stringOne.compareTo(stringTwo)>0){ // Ger positivt om s2 ligger före s1 alfabetiskt
 			return true; // dvs, byt plats på dem 
 		} else { // Annars, 
 			return false; // Gör ingenting
+		}
+	}
+
+	public void registerNewOwner(){
+		String name = input.prompt("Name",registrationScanner);
+		Owner owner = new Owner(name);
+		System.out.println(String.format("%s added to the register",name));
+		addOwner(owner);
+	}
+	public void registerNewOwner(Owner owner){ // För att slippa inmatning under test
+		addOwner(owner);
+	}
+
+	private Owner findOwner() {
+		String name = input.prompt("Enter the name of the owner",registrationScanner);
+		for (int i = 0; i<owners.size();i++){
+			if (owners.get(i).getName().equalsIgnoreCase(name)){
+				return owners.get(i);
+			}
+		} 
+		System.out.println("Error: no such owner");
+		return null;
+	}
+	private void alreadyHasOwner(){
+		System.out.println("Error: the dog already has an owner");
+	}
+	public void giveDog(){
+		boolean successful = false;
+		Dog dog = findDog();
+		if (dog.getHasOwner()){
+			alreadyHasOwner();
+		} else {
+			Owner owner = findOwner();
+			dog.addOwner(owner);	
+			//owner.addDog(dog);
+			System.out.println(String.format("%s now owns %s",owner.getName(),dog.getName()));
 		}
 	}
 	/*
@@ -253,10 +273,10 @@ public class Assignment {
 	 * 
 	 * Behövs från U8.2
 	 */
-//	public void addOwner(Owner o) {
-//		// Ersätt raden nedan med NAMNPÅLISTAN.add(o); eller motsvarande anrop
-//		throw new RuntimeException("Assignment.addOwner(Owner) är inte implementerad");
-//	}
+	public void addOwner(Owner o) {
+		// Ersätt raden nedan med NAMNPÅLISTAN.add(o); eller motsvarande anrop
+		owners.add(o);
+	}
 
 	/*
 	 * Byt ut koden i nedanstående metod så att ägaren läggs in i listan av ägare.
@@ -269,10 +289,10 @@ public class Assignment {
 	 * 
 	 * Behövs från U8.1
 	 */
-//	public Collection<Owner> getOwners() {
-//		// Ersätt raden nedan med return NAMNPÅSAMLINGEN; eller motsvarande anrop
-//		throw new RuntimeException("Assignment.getOwners är inte implementerad");
-//	}
+	public Collection<Owner> getOwners() {
+		// Ersätt raden nedan med return NAMNPÅSAMLINGEN; eller motsvarande anrop
+		return owners;
+	}
 
 	/*
 	 * Om du använder en array för att spara ägarna kan nedanstående variant
