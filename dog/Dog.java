@@ -47,6 +47,9 @@ class Dog {
 	public boolean getHasOwner(){
 		return this.hasOwner;
 	}
+	public Owner getOwner(){
+		return this.owner;
+	}
 	public String toString(){
 		return String.format(
 			"Name: %s, Breed: %s, Age: %d, Weight: %d, Tail length: %.1f",

@@ -72,8 +72,17 @@ public class DogTest {
 		assignment.registerNewOwner(new Owner("Husse2"));	
 		assignment.registerNewOwner(new Owner("Husse3"));	
 		assignment.registerNewOwner(new Owner("h"));	
-		assignment.giveDog();
-		assignment.giveDog();
+		assignment.registerNewOwner(new Owner("e"));	
+		assignment.giveDog(assignment.findDog("fido1"),assignment.findOwner("Husse1"));
+		assignment.giveDog(assignment.findDog("fido4"),assignment.findOwner("Husse1"));
+		assignment.giveDog(assignment.findDog("fido6"),assignment.findOwner("Husse1"));
+		assignment.giveDog(assignment.findDog("fidoa"),assignment.findOwner("Husse2"));
+		assignment.giveDog(assignment.findDog("fidob"),assignment.findOwner("Husse2"));
+		assignment.giveDog(assignment.findDog("fidoc"),assignment.findOwner("Husse3"));
+		assignment.giveDog(assignment.findDog("fidod"),assignment.findOwner("Husse3"));
+		assignment.giveDog(assignment.findDog("fidoe"),assignment.findOwner("h"));
+		assignment.listOwners();
+		assignment.listDogs();
 
 
 	}

@@ -19,9 +19,9 @@ public class Assignment {
 	public static final String REGISTER_NEW_OWNER_METHOD = "registerNewOwner"; // U8.1
 	public static final String FIND_OWNER_METHOD = "findOwner"; // U8.2 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String GIVE_DOG_METHOD = "giveDog"; // U8.3 och framåt
-	public static final String LIST_OWNERS_METHOD = ""; // U8.4
-	public static final String OWNER_OF_DOG_METHOD = ""; // U8.5, obs! metoden ska ligga i Owner-klassen
-	public static final String REMOVE_OWNER_METHOD = ""; // U8.7 och U9.6
+	public static final String LIST_OWNERS_METHOD = "listOwners"; // U8.4
+	public static final String OWNER_OF_DOG_METHOD = "ownerOfDog"; // U8.5, obs! metoden ska ligga i Owner-klassen
+	public static final String REMOVE_OWNER_METHOD = "removeOwner"; // U8.7 och U9.6
 	public static final String START_AUCTION_METHOD = ""; // U9.1 och framåt
 	public static final String FIND_AUCTION_METHOD = ""; // U9.2 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String MAKE_BID_METHOD = ""; // U9.3 och framåt
@@ -61,13 +61,19 @@ public class Assignment {
 						registrationScanner));
 			System.out.println("The following dogs has such a large tail:");
 			for (int i = 0; i<dogs.size(); i++) {
-				if (dogs.get(i).getTailLength() >= minTailLength) {
+				Dog dog = dogs.get(i);
+				if (dog.getTailLength() >= minTailLength) {
 					atLeastOne = true;
-					System.out.print(String.format("*%s ",dogs.get(i).getName()));
-					System.out.print(String.format("(%s, ",dogs.get(i).getBreed()));
-					System.out.print(String.format("%d years, ",dogs.get(i).getAge()));
-					System.out.print(String.format("%d kilo, ",dogs.get(i).getWeight()));
-					System.out.print(String.format("%.2f cm tail)\n",dogs.get(i).getTailLength()));
+					System.out.print(String.format("*%s ",dog.getName()));
+					System.out.print(String.format("(%s, ",dog.getBreed()));
+					System.out.print(String.format("%d years, ",dog.getAge()));
+					System.out.print(String.format("%d kilo, ",dog.getWeight()));
+					System.out.print(String.format("%.2f cm tail, ",dog.getTailLength()));
+					if (dog.getHasOwner()){
+						System.out.print(String.format("owned by %s)\n",dog.getOwner()));
+					} else {
+						System.out.print("no owner)");
+					}
 				} 
 			}
 			if (!atLeastOne) {
@@ -80,8 +86,17 @@ public class Assignment {
 			System.out.println("Error: No dogs in list");
 		}
 	}
-	private Dog findDog() {
+	private Dog findDog() { //För manuell inmatning
 		String name = input.prompt("Enter the name of the dog",registrationScanner);
+		for (int i = 0; i<dogs.size();i++){
+			if (dogs.get(i).getName().equalsIgnoreCase(name)){
+				return dogs.get(i);
+			}
+		}
+		noSuchDog(name); // Ger användare en chans till	
+		return null;
+	}
+	public Dog findDog(String name){ // För automatisk inmatning
 		for (int i = 0; i<dogs.size();i++){
 			if (dogs.get(i).getName().equalsIgnoreCase(name)){
 				return dogs.get(i);
@@ -190,8 +205,17 @@ public class Assignment {
 		addOwner(owner);
 	}
 
-	private Owner findOwner() {
+	public Owner findOwner() {// Manuell inmatning
 		String name = input.prompt("Enter the name of the owner",registrationScanner);
+		for (int i = 0; i<owners.size();i++){
+			if (owners.get(i).getName().equalsIgnoreCase(name)){
+				return owners.get(i);
+			}
+		} 
+		System.out.println("Error: no such owner");
+		return null;
+	}
+	public Owner findOwner(String name){//Automatisk inmatning
 		for (int i = 0; i<owners.size();i++){
 			if (owners.get(i).getName().equalsIgnoreCase(name)){
 				return owners.get(i);
@@ -204,7 +228,6 @@ public class Assignment {
 		System.out.println("Error: the dog already has an owner");
 	}
 	public void giveDog(){
-		boolean successful = false;
 		Dog dog = findDog();
 		if (dog.getHasOwner()){
 			alreadyHasOwner();
@@ -214,6 +237,38 @@ public class Assignment {
 			//owner.addDog(dog);
 			System.out.println(String.format("%s now owns %s",owner.getName(),dog.getName()));
 		}
+	}
+	public void giveDog(Dog dog, Owner owner){
+		if (dog.getHasOwner()){
+			alreadyHasOwner();
+		} else {
+			dog.addOwner(owner);	
+		}	
+	}
+	public void listOwners(){
+		if (owners.size()>0){
+			for (int i = 0; i<owners.size();i++){
+				System.out.print(String.format("%s owns ",owners.get(i)));
+				int nDogs = owners.get(i).getOwnedDogs().length;
+				for (int j = 0; j<nDogs;j++){
+					System.out.print(String.format("%s",owners.get(i).getOwnedDogs()[j].getName()));
+					if (j<nDogs-2){
+						System.out.print(", ");
+					} else if (j==nDogs-2 && nDogs>1){
+						System.out.print(" and ");
+					}  
+				}
+				if (nDogs==0){
+					System.out.print("no dogs");
+				}
+				System.out.print("\n");
+			}
+		} else {
+			noOwners();
+		}
+	}
+	private void noOwners(){
+		System.out.print("Error: no owners registered");
 	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
