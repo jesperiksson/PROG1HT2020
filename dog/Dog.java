@@ -10,7 +10,7 @@ class Dog {
 	private String[] taxAlias = {"tax", "dachshund","mäyräkoira","teckel"};
 	private boolean hasOwner = false;
 
-	Dog(String name, String breed, int age, int weight){
+	public Dog(String name, String breed, int age, int weight){
 		this.name = name;
 		this.breed = breed;
 		this.age = age;

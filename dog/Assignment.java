@@ -22,7 +22,7 @@ public class Assignment {
 	public static final String LIST_OWNERS_METHOD = "listOwners"; // U8.4
 	public static final String OWNER_OF_DOG_METHOD = "ownerOfDog"; // U8.5, obs! metoden ska ligga i Owner-klassen
 	public static final String REMOVE_OWNER_METHOD = "removeOwner"; // U8.7 och U9.6
-	public static final String START_AUCTION_METHOD = ""; // U9.1 och framåt
+	public static final String START_AUCTION_METHOD = "startAuction"; // U9.1 och framåt
 	public static final String FIND_AUCTION_METHOD = ""; // U9.2 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String MAKE_BID_METHOD = ""; // U9.3 och framåt
 	public static final String LIST_BIDS_METHOD = ""; // U9.4 och framåt
@@ -37,7 +37,9 @@ public class Assignment {
 	private Scanner registrationScanner = new Scanner(System.in);
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
 	private ArrayList<Owner> owners = new ArrayList<Owner>();
+	private ArrayList<Auction> auctions = new ArrayList<Auction>();
 	private Input input = new Input();
+
 	public void registerNewDog(){
 		String name = input.prompt("\nName", registrationScanner);
 		String breed = input.prompt("Breed", registrationScanner);
@@ -120,28 +122,6 @@ public class Assignment {
 			noDogs();
 		}
 	}
-	/*
-	private int findDogIndex(String name){ // Letar upp index för hunden 
-		if (dogs.size()>0){
-			for (int i = 0; i<dogs.size();i++){
-				if (dogs.get(i).getName().equalsIgnoreCase(name)){
-					return i;
-				}
-			}	
-		} 
-		return dogs.size()+1;
-	}
-	public void removeDog() {
-		String name = input.prompt("Enter the name of the dog to remove",registrationScanner);
-		int index = findDogIndex(name);
-		if (index>dogs.size()) {
-			System.out.println(String.format("Error: no dog named %s",name));
-		} else {
-			dogs.remove(index);
-			System.out.println(String.format("%s is removed from the register",name));
-		}
-	}
-	*/
 	public void removeDog(){
 		String name = input.prompt("Enter the name of the dog to remove",registrationScanner);
 		for (int i = 0; i<dogs.size(); i++){
@@ -309,6 +289,27 @@ public class Assignment {
 	}
 	private void noOwners(){
 		System.out.print("Error: no owners registered");
+	}
+	public void startAuction(){
+		Dog dog = findDog();
+		if (checkIfDogInAuction(dog)){
+			System.out.println(String.format("Error: %s is already up for auction",dog.getName()));
+		} else if (dog.getHasOwner()){
+			System.out.println(String.format("Error: %s already has an owner",dog.getName()));
+		} else {
+			auctions.add(new Auction(dog));
+			System.out.println(String.format(
+					"%s has been put up for auction in auction #%d",
+					dog.getName(),auctions.get(auctions.size()-1).getSerialNumber()));
+		}
+	}
+	private boolean checkIfDogInAuction(Dog dog){
+		for (int i = 0;i<auctions.size();i++){
+			if (dog == auctions.get(i).getDogForSale()){
+				return true;
+			}
+		}
+		return false;
 	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
