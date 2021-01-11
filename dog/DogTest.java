@@ -81,8 +81,14 @@ public class DogTest {
 		assignment.giveDog(assignment.findDog("fidoc"),assignment.findOwner("Husse3"));
 		assignment.giveDog(assignment.findDog("fidod"),assignment.findOwner("Husse3"));
 		assignment.giveDog(assignment.findDog("fidoe"),assignment.findOwner("h"));
+		//assignment.findOwner("Husse1").removeDogFromOwner(assignment.findDog("fido4"));
+		
 		assignment.listOwners();
 		assignment.listDogs();
+		assignment.removeDog();
+		assignment.listOwners();
+		assignment.listDogs();
+		
 
 
 	}

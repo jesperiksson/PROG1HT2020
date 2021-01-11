@@ -72,7 +72,7 @@ public class Assignment {
 					if (dog.getHasOwner()){
 						System.out.print(String.format("owned by %s)\n",dog.getOwner()));
 					} else {
-						System.out.print("no owner)");
+						System.out.print("no owner)\n");
 					}
 				} 
 			}
@@ -120,6 +120,7 @@ public class Assignment {
 			noDogs();
 		}
 	}
+	/*
 	private int findDogIndex(String name){ // Letar upp index för hunden 
 		if (dogs.size()>0){
 			for (int i = 0; i<dogs.size();i++){
@@ -139,6 +140,45 @@ public class Assignment {
 			dogs.remove(index);
 			System.out.println(String.format("%s is removed from the register",name));
 		}
+	}
+	*/
+	public void removeDog(){
+		String name = input.prompt("Enter the name of the dog to remove",registrationScanner);
+		for (int i = 0; i<dogs.size(); i++){
+			Dog dog = dogs.get(i);
+			if (dog.getName().equals(name)){
+				System.out.println("here");
+				if (dog.getHasOwner()){
+					Owner owner = dog.getOwner();
+					owner.removeDogFromOwner(dog);
+					System.out.println(String.format("%s removed from %s",name,owner.getName()));
+				} else {
+					System.out.println(String.format("%s removed",name));	
+				}
+				dogs.remove(i);
+				return;
+			}
+		}
+		System.out.println(String.format("Error: no dog named %s",name));
+	}
+	public void removeDog(String name){
+		for (int i = 0; i<dogs.size(); i++){
+			Dog dog = dogs.get(i);
+			if (dog.getName().equals(name)){
+				System.out.println("here");
+				System.out.println(dog);
+				if (dog.getHasOwner()){
+					Owner owner = dog.getOwner();
+					owner.removeDogFromOwner(dog);
+					System.out.println(String.format("%s removed from %s",name,owner.getName()));
+				} else {
+					System.out.println(String.format("%f removed",name));	
+				}
+				dogs.remove(i);
+				return;
+			}
+		}
+		System.out.println(String.format("Error: no dog named %s",name));
 	}
 	// InsertionSort, informationen hittade jag här: https://www.geeksforgeeks.org/insertion-sort/
 	public ArrayList<Dog> sortDogs(){
