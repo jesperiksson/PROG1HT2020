@@ -92,12 +92,16 @@ public class DogTest {
 		assignment.listOwners();
 		assignment.listDogs();
 		*/
-		assignment.listDogs();
-		assignment.startAuction();
-		assignment.startAuction();
-		assignment.startAuction();
-		assignment.startAuction();
-
+		//assignment.listDogs();
+		//assignment.startAuction();
+		//assignment.startAuction();
+		//assignment.startAuction();
+		assignment.startAuction(assignment.findDog("a"));
+		assignment.makeBid(assignment.findDog("a"),assignment.findOwner("h"),2);
+		assignment.makeBid(assignment.findDog("a"),assignment.findOwner("e"),3);
+		assignment.makeBid(assignment.findDog("a"),assignment.findOwner("h"),4);
+		assignment.makeBid(assignment.findDog("a"),assignment.findOwner("e"),5);
+		assignment.listBids();
 
 	}
 }

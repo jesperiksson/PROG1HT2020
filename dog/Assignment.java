@@ -23,9 +23,9 @@ public class Assignment {
 	public static final String OWNER_OF_DOG_METHOD = "ownerOfDog"; // U8.5, obs! metoden ska ligga i Owner-klassen
 	public static final String REMOVE_OWNER_METHOD = "removeOwner"; // U8.7 och U9.6
 	public static final String START_AUCTION_METHOD = "startAuction"; // U9.1 och framåt
-	public static final String FIND_AUCTION_METHOD = ""; // U9.2 - hjälpmetod tänkt att användas i de följande stegen
-	public static final String MAKE_BID_METHOD = ""; // U9.3 och framåt
-	public static final String LIST_BIDS_METHOD = ""; // U9.4 och framåt
+	public static final String FIND_AUCTION_METHOD = "findAuction"; // U9.2 - hjälpmetod tänkt att användas i de följande stegen
+	public static final String MAKE_BID_METHOD = "makeBid"; // U9.3 och framåt
+	public static final String LIST_BIDS_METHOD = "listBids"; // U9.4 och framåt
 	public static final String LIST_AUCTIONS_METHOD = ""; // U9.5 och framåt
 	public static final String CLOSE_AUCTION_METHOD = ""; // U9.6
 
@@ -303,9 +303,110 @@ public class Assignment {
 					dog.getName(),auctions.get(auctions.size()-1).getSerialNumber()));
 		}
 	}
+	public void startAuction(Dog dog){
+		if (checkIfDogInAuction(dog)){
+			System.out.println(String.format("Error: %s is already up for auction",dog.getName()));
+		} else if (dog.getHasOwner()){
+			System.out.println(String.format("Error: %s already has an owner",dog.getName()));
+		} else {
+			auctions.add(new Auction(dog));
+			System.out.println(String.format(
+					"%s has been put up for auction in auction #%d",
+					dog.getName(),auctions.get(auctions.size()-1).getSerialNumber()));
+		}
+	}
 	private boolean checkIfDogInAuction(Dog dog){
 		for (int i = 0;i<auctions.size();i++){
 			if (dog == auctions.get(i).getDogForSale()){
+				return true;
+			}
+		}
+		return false;
+	}
+	public Auction findAuction(Dog dog){
+		for (int i = 0;i<auctions.size();i++){
+			if (auctions.get(i).getDogForSale()==dog){
+				return auctions.get(i);
+			}
+		}	
+		System.out.println(String.format("Error: Auction for %s doesn't exist",dog.getName()));
+		return null;
+	}
+	public void makeBid(){
+		int allowedAttempts = 2;
+		Owner user = findOwner();
+		if (user==null){
+			throw new RuntimeException("");
+		}
+		Dog dog = findDog();
+		if (dog.getHasOwner()){
+			System.out.println(String.format("Error: %s is not up for sale",dog.getName()));	
+		} else {
+			Auction auction = findAuction(dog);
+			/*if (user == auction.getHighestBid().getBidder()){
+				System.out.println(String.format("Error: %s already has the highest bid",user.getName()));
+				throw new RuntimeException();
+			}*/
+			int attempts = 0;
+			while (attempts<allowedAttempts){
+				int bidAmount = input.promptInt(String.format("Amount to bid (min %d kr)",auction.getHighestBid().getBid()), registrationScanner); 
+				if (auction.raiseBid(new Bid(bidAmount, user))){
+					break;
+				} else {
+					attempts++;
+				}
+			}
+		}
+	}
+	public void makeBid(Dog dog, Owner user, int bidAmount){
+		int allowedAttempts = 2;
+		if (user==null){
+			throw new RuntimeException("");
+		}
+		if (dog.getHasOwner()){
+			System.out.println(String.format("Error: %s is not up for sale",dog.getName()));	
+		} else {
+			Auction auction = findAuction(dog);
+			/*if (user == auction.getHighestBid().getBidder()){
+				System.out.println(String.format("Error: %s already has the highest bid",user.getName()));
+				throw new RuntimeException();
+			}*/
+			int attempts = 0;
+			while (attempts<allowedAttempts){
+				if (auction.raiseBid(new Bid(bidAmount, user))){
+					break;
+				} else {
+					attempts++;
+				}
+			}
+		}
+	}
+	public void listOneBids(){
+		Dog dog = findDog();
+		Auction auction = findAuction(dog);
+		System.out.println(String.format(
+					"Highest bid for %s: %s %d kr",
+					dog.getName(),auction.getHighestBid().getBidder().getName(),
+					auction.getHighestBid().getBid()));
+	}
+	public void listBids(){
+		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
+		Dog dog = findDog();
+		Auction auction = findAuction(dog);
+		System.out.println(String.format("Highest bids for the auction for %s",dog.getName()));
+		for (int i = auction.getBidHistory().length-1;i>0;i--){
+			if (!checkIfArrayListContains(auction.getBidHistory()[i].getBidder(),alreadyDisplayed)){
+				System.out.println(String.format(
+							"%s %d kr",
+							auction.getBidHistory()[i].getBidder().getName(),
+							auction.getBidHistory()[i].getBid()));	
+				alreadyDisplayed.add(auction.getBidHistory()[i].getBidder());
+			}
+		}
+	}
+	private boolean checkIfArrayListContains(Owner owner,ArrayList<Owner> list){
+		for (int i = list.size()-1;i>=0;i--){
+			if (list.get(i)==owner){
 				return true;
 			}
 		}
