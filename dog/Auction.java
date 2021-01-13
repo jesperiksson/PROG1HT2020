@@ -48,4 +48,20 @@ class Auction{
 		newArr[n-1] = bid;
 		this.bidHistory =  newArr;
 	}
+	public void removeBidFromAuction(Bid bid){
+		Bid[] newBids = new Bid[this.bidHistory.length-1];
+		int i = 0;
+		int j = 0;
+		while (i<this.bidHistory.length){
+			if (bid!=this.getBidHistory()[i]){
+				newBids[j] = bidHistory[i];
+				i++;
+				j++;
+			} else {
+				i++;
+			}
+		}
+		this.bidHistory = newBids;
+		this.highestBid = newBids[i-2];
+	}
 }

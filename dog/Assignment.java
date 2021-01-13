@@ -26,8 +26,8 @@ public class Assignment {
 	public static final String FIND_AUCTION_METHOD = "findAuction"; // U9.2 - hjälpmetod tänkt att användas i de följande stegen
 	public static final String MAKE_BID_METHOD = "makeBid"; // U9.3 och framåt
 	public static final String LIST_BIDS_METHOD = "listBids"; // U9.4 och framåt
-	public static final String LIST_AUCTIONS_METHOD = ""; // U9.5 och framåt
-	public static final String CLOSE_AUCTION_METHOD = ""; // U9.6
+	public static final String LIST_AUCTIONS_METHOD = "listAuctions"; // U9.5 och framåt
+	public static final String CLOSE_AUCTION_METHOD = "closeAuction"; // U9.6
 
 	/********************************************************************************
 	 * Här nedanför skriver du dina metoder. Du kommer att kunna lämna in samma
@@ -110,6 +110,9 @@ public class Assignment {
 	private void noSuchDog(String name){
 		System.out.println(String.format("Error: no dog named %s",name));
 	}
+	private void noSuchOwner(String name){
+		System.out.println(String.format("Error: no owner named %s",name));
+	}
 	private void noDogs(){
 		System.out.println("Error: No dogs in list");
 	}
@@ -124,24 +127,12 @@ public class Assignment {
 	}
 	public void removeDog(){
 		String name = input.prompt("Enter the name of the dog to remove",registrationScanner);
-		for (int i = 0; i<dogs.size(); i++){
-			Dog dog = dogs.get(i);
-			if (dog.getName().equals(name)){
-				System.out.println("here");
-				if (dog.getHasOwner()){
-					Owner owner = dog.getOwner();
-					owner.removeDogFromOwner(dog);
-					System.out.println(String.format("%s removed from %s",name,owner.getName()));
-				} else {
-					System.out.println(String.format("%s removed",name));	
-				}
-				dogs.remove(i);
-				return;
-			}
-		}
-		System.out.println(String.format("Error: no dog named %s",name));
+		removeDogTwo(name);
 	}
 	public void removeDog(String name){
+		removeDogTwo(name);
+	}
+	private void removeDogTwo(String name){
 		for (int i = 0; i<dogs.size(); i++){
 			Dog dog = dogs.get(i);
 			if (dog.getName().equals(name)){
@@ -151,8 +142,10 @@ public class Assignment {
 					Owner owner = dog.getOwner();
 					owner.removeDogFromOwner(dog);
 					System.out.println(String.format("%s removed from %s",name,owner.getName()));
+				} else if (checkIfDogInAuction(dog)){
+					closeAuction(dog);	
 				} else {
-					System.out.println(String.format("%f removed",name));	
+					System.out.println(String.format("%s removed",name));	
 				}
 				dogs.remove(i);
 				return;
@@ -227,15 +220,12 @@ public class Assignment {
 
 	public Owner findOwner() {// Manuell inmatning
 		String name = input.prompt("Enter the name of the owner",registrationScanner);
-		for (int i = 0; i<owners.size();i++){
-			if (owners.get(i).getName().equalsIgnoreCase(name)){
-				return owners.get(i);
-			}
-		} 
-		System.out.println("Error: no such owner");
-		return null;
+		return findOwnerTwo(name);
 	}
 	public Owner findOwner(String name){//Automatisk inmatning
+		return findOwnerTwo(name);
+	}
+	private Owner findOwnerTwo(String name){
 		for (int i = 0; i<owners.size();i++){
 			if (owners.get(i).getName().equalsIgnoreCase(name)){
 				return owners.get(i);
@@ -253,17 +243,17 @@ public class Assignment {
 			alreadyHasOwner();
 		} else {
 			Owner owner = findOwner();
-			dog.addOwner(owner);	
-			//owner.addDog(dog);
-			System.out.println(String.format("%s now owns %s",owner.getName(),dog.getName()));
+			giveDogTwo(dog,owner);
 		}
 	}
-	public void giveDog(Dog dog, Owner owner){
-		if (dog.getHasOwner()){
-			alreadyHasOwner();
-		} else {
-			dog.addOwner(owner);	
-		}	
+	public void giveDog(Dog dog, Owner owner){	
+		giveDogTwo(dog,owner);
+	}
+	private void giveDogTwo(Dog dog, Owner owner){
+		dog.addOwner(owner);	
+		//owner.addDog(dog);
+		removeAuction(dog);
+		System.out.println(String.format("%s now owns %s",owner.getName(),dog.getName()));
 	}
 	public void listOwners(){
 		if (owners.size()>0){
@@ -289,6 +279,44 @@ public class Assignment {
 	}
 	private void noOwners(){
 		System.out.print("Error: no owners registered");
+	}
+	public void removeOwner(){
+		String name = input.prompt("Enter the name of the owner",registrationScanner);
+		removeOwnerTwo(name);
+	}
+	public void removeOwner(String name){
+		removeOwnerTwo(name);
+	} 
+	private void removeOwnerTwo(String name){
+		Owner owner = findOwner(name);
+		for (int i = 0;i<owners.size();i++){
+			if (owner == owners.get(i)){
+				removeDogsOfOwner(owner);
+				removeBidsOfOwner(owner);
+				owners.remove(i);
+				System.out.println(String.format("%s removed",owner.getName()));
+				return;
+			}
+		}	
+		noSuchOwner(name);
+	}
+	private void removeDogsOfOwner(Owner owner){
+		for (int i = dogs.size()-1;i>=0;i--){
+			if (dogs.get(i).getOwner() == owner){
+				removeDog(dogs.get(i).getName());
+			}
+		} 
+	}
+	private void removeBidsOfOwner(Owner owner){
+		for (int i = 0; i<auctions.size();i++){
+			Auction auction = auctions.get(i);
+			Bid[] bidHistory = auction.getBidHistory();
+			for (int j = bidHistory.length-1;j>=0;j--){
+				if (owner == bidHistory[j].getBidder()){
+					auction.removeBidFromAuction(bidHistory[j]);
+				}
+			}
+		}
 	}
 	public void startAuction(){
 		Dog dog = findDog();
@@ -349,7 +377,9 @@ public class Assignment {
 			}*/
 			int attempts = 0;
 			while (attempts<allowedAttempts){
-				int bidAmount = input.promptInt(String.format("Amount to bid (min %d kr)",auction.getHighestBid().getBid()), registrationScanner); 
+				int bidAmount = input.promptInt(String.format(
+						"Amount to bid (min %d kr)",auction.getHighestBid().getBid()),
+						registrationScanner); 
 				if (auction.raiseBid(new Bid(bidAmount, user))){
 					break;
 				} else {
@@ -381,20 +411,20 @@ public class Assignment {
 			}
 		}
 	}
-	public void listOneBids(){
-		Dog dog = findDog();
-		Auction auction = findAuction(dog);
-		System.out.println(String.format(
-					"Highest bid for %s: %s %d kr",
-					dog.getName(),auction.getHighestBid().getBidder().getName(),
-					auction.getHighestBid().getBid()));
-	}
 	public void listBids(){
-		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
 		Dog dog = findDog();
 		Auction auction = findAuction(dog);
-		System.out.println(String.format("Highest bids for the auction for %s",dog.getName()));
-		for (int i = auction.getBidHistory().length-1;i>0;i--){
+		listBidsTwo(auction);
+	}
+	public void listBids(Dog dog){
+		Auction auction = findAuction(dog);
+		listBidsTwo(auction);
+	}
+	private void listBidsTwo(Auction auction){
+		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
+		System.out.println(String.format("Highest bids for the auction for %s",
+					auction.getDogForSale().getName()));
+		for (int i = auction.getBidHistory().length-1;i>0 && i>auction.getBidHistory().length-4;i--){
 			if (!checkIfArrayListContains(auction.getBidHistory()[i].getBidder(),alreadyDisplayed)){
 				System.out.println(String.format(
 							"%s %d kr",
@@ -403,6 +433,7 @@ public class Assignment {
 				alreadyDisplayed.add(auction.getBidHistory()[i].getBidder());
 			}
 		}
+	
 	}
 	private boolean checkIfArrayListContains(Owner owner,ArrayList<Owner> list){
 		for (int i = list.size()-1;i>=0;i--){
@@ -411,6 +442,58 @@ public class Assignment {
 			}
 		}
 		return false;
+	}
+	public void listAuctions(){
+		if (auctions.size()>0){
+			for (int i = 0; i<auctions.size(); i++){
+				System.out.println(String.format("Auction #%d: ",auctions.get(i).getSerialNumber()));
+				listBids(auctions.get(i).getDogForSale());
+			}
+		} else {
+			System.out.println("Error: no auctions in progress");
+		}
+	}
+	public void closeAuction(){
+		Dog dog = findDog();
+		closeAuctionTwo(dog);
+	}
+	public void closeAuction(Dog dog){
+		closeAuctionTwo(dog);
+	}
+	private void closeAuctionTwo(Dog dog){
+		if (checkIfDogInAuction(dog)){
+			Auction auction = findAuction(dog);
+			System.out.print(String.format("Auction #%d, for %s is closed. ",
+					auction.getSerialNumber(),auction.getDogForSale().getName()));
+			if (auction.getBidHistory().length == 1){
+				dogIsNotSold(dog);
+			} else {
+				dogIsSold(dog);
+			}
+			removeAuction(dog);
+		} else {
+			System.out.println("Error: this dog is not up for auction");
+		}	
+	}
+	private void removeAuction(Dog dog){
+		for (int i = 0; i<auctions.size(); i++){
+			if (dog == auctions.get(i).getDogForSale()){
+				auctions.remove(i);
+				return;
+			}
+		}
+	}
+	private void dogIsSold(Dog dog){
+		Auction auction = findAuction(dog);
+		System.out.println(String.format(
+			" The winning bid was %dkr and was made by %s",
+			auction.getHighestBid().getBid(),
+			auction.getHighestBid().getBidder().getName()));
+		giveDog(dog,auction.getHighestBid().getBidder());
+	}
+	private void dogIsNotSold(Dog dog){
+		System.out.println(String.format("No bids were made for ",dog.getName()));
+	
 	}
 	/*
 	 * Byt ut koden i nedanstående metod så att den väntar på att användaren trycker
