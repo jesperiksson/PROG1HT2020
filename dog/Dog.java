@@ -1,5 +1,5 @@
 // Jesper Eriksson jeer6905
-package dog;
+
 class Dog {
 	private String name;
 	private String breed;
@@ -8,25 +8,26 @@ class Dog {
 	private double tail;
 	private Owner owner;
 	private String[] taxAlias = {"tax", "dachshund","mäyräkoira","teckel"};
-	private boolean hasOwner = false;
+	private boolean hasOwner;
+	private final float taxTail = 3.7f;
 
-	public Dog(String name, String breed, int age, int weight){
+	Dog(String name, String breed, int age, int weight){
 		this.name = name;
 		this.breed = breed;
 		this.age = age;
 		this.weight = weight;
 		if (isInArray(this.taxAlias, this.breed)){
-			this.tail = (double)3.7;
+			this.tail = taxTail;
 		}else{
-			this.tail = (double)this.age*this.weight/10.0;
+			this.tail = (float)this.age*this.weight/10.0f;
 		}
 	}
 	public void increaseAge(){
 		this.age++;
 		if (isInArray(this.taxAlias, this.breed)){
-			this.tail = (double)3.7;
+			this.tail = taxTail;
 		}else{
-			this.tail = (double)this.age*this.weight/10.0;
+			this.tail = (float)this.age*this.weight/10.0f;
 		}
 	}
 	public String getName(){

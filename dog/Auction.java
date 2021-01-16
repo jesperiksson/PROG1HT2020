@@ -1,15 +1,15 @@
 // Jesper Eriksson jeer6905
-package dog;
+
 class Auction{
-	private static int counter = 0;
+	private static int counter;
 	private int serialNumber;
 	private Dog dogForSale;
 	private Bid highestBid;
 	private Bid[] bidHistory = new Bid[0];
-	public Auction(Dog dog){
+	Auction(Dog dog){
 		this.serialNumber = ++counter;
 		this.dogForSale = dog;
-		Bid initialBid = new Bid(1,new Owner("initialBid"));
+		Bid initialBid = new Bid(0,new Owner("initialBid"));
 		addBid(initialBid);
 		this.highestBid = initialBid;
 	}
