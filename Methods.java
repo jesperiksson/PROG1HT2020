@@ -15,34 +15,34 @@ public class Methods {
 	    printCommands();
         while (!endProgram) {
             command = input.prompt("command ",scanner);
-            if (command.equals("register new dog")){
-                registerNewDog();
-            } else if (command.equals("list dogs")){
-                listDogs();
-            } else if (command.equals("increase age")){
-                increaseAge();
-            } else if (command.equals("register new owner")){
-                registerNewOwner();
-            } else if (command.equals("give dog")){
-                giveDog();
-            } else if (command.equals("list owners")){
-                listOwners();
-            } else if (command.equals("remove owner")){
-                removeOwner();
-            } else if (command.equals("start auction")){
-                startAuction();
-            } else if (command.equals("make bid")){
-                makeBid();
-            } else if (command.equals("list bids")){
-                listBids();
-            } else if (command.equals("list auctions")){
-                listAuctions();
-            } else if (command.equals("close auction")){
-                closeAuction();
-            } else if (command.equals("exit")){
+            if (command.equals("exit")|| command.equals("0")){
                 endProgram = true;
-            } else if (command.equals("remove dog")){
+	    } else if (command.equals("register new dog") || command.equals("1")){
+                registerNewDog();
+            } else if (command.equals("list dogs")|| command.equals("2")){
+                listDogs();
+            } else if (command.equals("increase age")|| command.equals("3")){
+                increaseAge();
+            } else if (command.equals("remove dog")|| command.equals("4")){
                 removeDog();
+            } else if (command.equals("register new owner")|| command.equals("5")){
+                registerNewOwner();
+            } else if (command.equals("give dog")|| command.equals("6")){
+                giveDog();
+            } else if (command.equals("list owners")|| command.equals("7")){
+                listOwners();
+            } else if (command.equals("remove owner")|| command.equals("8")){
+                removeOwner();
+            } else if (command.equals("start auction")|| command.equals("9")){
+                startAuction();
+            } else if (command.equals("make bid")|| command.equals("10")){
+                makeBid();
+            } else if (command.equals("list bids")|| command.equals("11")){
+                listBids();
+            } else if (command.equals("list auctions")|| command.equals("12")){
+                listAuctions();
+            } else if (command.equals("close auction")|| command.equals("13")){
+                closeAuction();
             } else {
                 System.out.println("Error: command not recognized");
                 printCommands();
@@ -51,9 +51,10 @@ public class Methods {
 	}
     private void printCommands(){	
 	    System.out.println("Here are the available commands: ");
-	    System.out.println("register new dog\nlist dogs\nincrease age\nregister new owner\ngive dog");
-	    System.out.println("list owners\nremove owner\nstart auction\nmake bid\nlist bids");
-	    System.out.println("list auctions\nclose auction\nexit");
+	    System.out.println("[1] register new dog\n[2] list dogs\n[3] increase age\n[4] remove dog");
+	    System.out.println("[5] register new owner\n[6] give dog\n[7] list owners\n[8] remove owner");
+	    System.out.println("[9] start auction\n[10] make bid\n[11] list bids\n[12] list auctions");
+	    System.out.println("[13] close auction\n[0] exit");
 	}
 	//############# REGISTRATION METHODS ##########
 	public void registerNewDog(){
@@ -98,19 +99,23 @@ public class Methods {
 	}
 	public void startAuction(){
 		Dog dog = findDog();
-		if (checkIfDogInAuction(dog)){
-			System.out.println(String.format("Error: %s is already up for auction",dog.getName()));
-		} else if (dog.getHasOwner()){
-			System.out.println(String.format("Error: %s already has an owner",dog.getName()));
+		if (dog != null){
+    		if (checkIfDogInAuction(dog)){
+    			System.out.println(String.format("Error: %s is already up for auction",dog.getName()));
+    		} else if (dog.getHasOwner()){
+    			System.out.println(String.format("Error: %s already has an owner",dog.getName()));
+    		} else {
+    			auctions.add(new Auction(dog));
+    			System.out.println(String.format(
+    					"%s has been put up for auction in auction #%d",
+    					dog.getName(),auctions.get(auctions.size()-1).getSerialNumber()));
+    		}
 		} else {
-			auctions.add(new Auction(dog));
-			System.out.println(String.format(
-					"%s has been put up for auction in auction #%d",
-					dog.getName(),auctions.get(auctions.size()-1).getSerialNumber()));
+		    System.out.print(" ");
 		}
 	}
 	public void makeBid(){
-		int allowedAttempts = 2;
+		int allowedAttempts = 10;
 		Owner user = findOwner();
 		if (user==null){
 			throw new RuntimeException("");
@@ -214,20 +219,13 @@ public class Methods {
 		    System.out.print("no owner)\n");
 	    }
 	}
-	public void listBids(){
+	public void listBids(){// Anropas från user, alla bud
 		Dog dog = findDog();
 		Auction auction = findAuction(dog);
-		listBidsTwo(auction,auction.getBidHistory().length);
-	}
-	public void listBids(Dog dog){
-		Auction auction = findAuction(dog);
-		listBidsTwo(auction,3);
-	}
-	private void listBidsTwo(Auction auction, int bidsQuantity){
 		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
 		System.out.println(String.format("Highest bids for the auction for %s",
 					auction.getDogForSale().getName()));
-		for (int i = auction.getBidHistory().length-1;i>0 && i>auction.getBidHistory().length-1-bidsQuantity;i--){
+		for (int i = auction.getBidHistory().length-1;i>0;i--){
 			if (!alreadyDisplayed.contains(auction.getBidHistory()[i].getBidder())){
 				System.out.println(String.format(
 							"%s %d kr",
@@ -236,7 +234,26 @@ public class Methods {
 				alreadyDisplayed.add(auction.getBidHistory()[i].getBidder());
 			}
 		}
-	
+	}
+	public void listBids(Dog dog){ // Anropas från listAuction, 3 bud
+	    int numBids = 3;
+		Auction auction = findAuction(dog);
+		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
+		System.out.println(String.format("Highest bids for the auction for %s",
+					auction.getDogForSale().getName()));
+		int i = auction.getBidHistory().length-1;
+		int j = 0;
+		while (i>0 && j<numBids){
+			if (!alreadyDisplayed.contains(auction.getBidHistory()[i].getBidder())){
+				System.out.println(String.format(
+							"%s %d kr",
+							auction.getBidHistory()[i].getBidder().getName(),
+							auction.getBidHistory()[i].getBid()));	
+				alreadyDisplayed.add(auction.getBidHistory()[i].getBidder());
+				j++;
+			}
+			i--;
+		}
 	}
 	public void listAuctions(){
 		if (auctions.size()>0){
@@ -422,7 +439,7 @@ public class Methods {
 			// Åtminstone två hundar har samma svanslängd x
 			if (list.get(i-1).getTailLength()== list.get(i).getTailLength()) { 
 				int j = 1;
-				while (list.get(i).getTailLength() == list.get(i+j).getTailLength()){
+				while (list.get(i).getTailLength() == list.get(i+j).getTailLength() && j+i<list.size()){ // Ifall alla hundar har lika lång svans
 					j++; // j är antalet hunder med svanslängd x
 				}
 				for (int k = i;k<i+j;k++){
