@@ -58,7 +58,7 @@ public class Methods {
 	}
 	//############# REGISTRATION METHODS ##########
 	public void registerNewDog(){
-		String name = input.prompt("\nName", scanner);
+		String name = input.promptName("\nName", scanner);
 		String breed = input.prompt("Breed", scanner);
 		int age = input.convertToInt(input.prompt("Age", scanner));
 		int weight = input.convertToInt(input.prompt("Weight", scanner));
@@ -71,7 +71,7 @@ public class Methods {
 		dogs.add(d);
 	}
 	public void registerNewOwner(){
-		String name = input.prompt("Name",scanner);
+		String name = input.promptName("Name",scanner);
 		Owner owner = new Owner(name);
 		System.out.println(String.format("%s added to the register",name));
 		addOwner(owner);
@@ -85,7 +85,11 @@ public class Methods {
 			alreadyHasOwner();
 		} else {
 			Owner owner = findOwner();
+			if (owner != null){
 			giveDogTwo(dog,owner);
+			} else {
+			    System.out.print(" ");
+			}
 		}
 	}
 	public void giveDog(Dog dog, Owner owner){	
@@ -153,20 +157,19 @@ public class Methods {
 		return input.waitForEnter(scanner);
 	}
 	public void increaseAge() {
-		if (dogs.size()>0) {
-			Dog dog = findDog();
-			dog.increaseAge();
-			System.out.println(String.format("%s is now one year older",dog.getName()));
-		} else {
-			noDogs();
-		}
+		Dog dog = findDog();
+		if (dog != null){
+    		dog.increaseAge();
+	    	System.out.println(String.format("%s is now one year older",dog.getName()));
+        } 
 	}
 	// ############ LIST METHODS ##########	
 	public void listDogs(){
 	    sortDogs();
+	    sortDogs();
 		boolean atLeastOne = false;
 		if (dogs.size()>0){
-			double minTailLength = input.convertToDouble(
+			double minTailLength = input.convertToFloat(
 					input.prompt(
 						"Smallest tail length to display",
 						scanner));
@@ -189,9 +192,9 @@ public class Methods {
 		if (owners.size()>0){
 			for (int i = 0; i<owners.size();i++){
 				System.out.print(String.format("%s owns ",owners.get(i)));
-				int numDogs = owners.get(i).getOwnedDogs().length;
+				int numDogs = owners.get(i).getNumberOfOwnedDogs();
 				for (int j = 0; j<numDogs;j++){
-					System.out.print(String.format("%s",owners.get(i).getOwnedDogs()[j].getName()));
+					System.out.print(String.format("%s",owners.get(i).getOwnedDogs()));
 					if (j<numDogs-2){
 						System.out.print(", ");
 					} else if (j==numDogs-2 && numDogs>1){
@@ -265,9 +268,9 @@ public class Methods {
 			System.out.println("Error: no auctions in progress");
 		}
 	}
-	// ############### FIND METHODS ###########
+	// ############### FIND/GET METHODS ###########
 	private Dog findDog() { //För manuell inmatning
-		String name = input.prompt("Enter the name of the dog",scanner);
+		String name = input.promptName("Enter the name of the dog",scanner);
 		for (int i = 0; i<dogs.size();i++){
 			if (dogs.get(i).getName().equalsIgnoreCase(name)){
 				return dogs.get(i);
@@ -277,7 +280,7 @@ public class Methods {
 		return null;
 	}
 	public Owner findOwner() {// Manuell inmatning
-		String name = input.prompt("Enter the name of the owner",scanner);
+		String name = input.promptName("Enter the name of the owner",scanner);
 		return findOwnerTwo(name);
 	}
 	public Owner findOwner(String name){//Automatisk inmatning
@@ -309,12 +312,12 @@ public class Methods {
 		System.out.println(String.format("Error: Auction for %s doesn't exist",dog.getName()));
 		return null;
 	}
-	public Collection<Owner> getOwners() {
-		return owners;
-	}
+	//public Collection<Owner> getOwners() {
+	//	return owners;
+	//}
 	// ########## REMOVE METHODS ############
 	public void removeDog(){
-		String name = input.prompt("Enter the name of the dog to remove",scanner);
+		String name = input.promptName("Enter the name of the dog to remove",scanner);
 		removeDogTwo(name);
 	}
 	public void removeDog(String name){
@@ -342,7 +345,7 @@ public class Methods {
 		noSuchDog(name);
 	}
 	public void removeOwner(){
-		String name = input.prompt("Enter the name of the owner",scanner);
+		String name = input.promptName("Enter the name of the owner",scanner);
 		removeOwnerTwo(name);
 	}
 	public void removeOwner(String name){
@@ -433,16 +436,18 @@ public class Methods {
 	private void sortDogsByName(ArrayList<Dog> list){
 	
 		// Sortera hundar med samma svanslängd på namn
-		int i = 1;
-		while (i <list.size()){
+		int i = 0;
+		while (i+1 <list.size()){
 		//for (int i = 1; i<list.size();i++){
 			// Åtminstone två hundar har samma svanslängd x
-			if (list.get(i-1).getTailLength()== list.get(i).getTailLength()) { 
+			if (list.get(i).getTailLength()== list.get(i+1).getTailLength()) { 
 				int j = 1;
-				while (list.get(i).getTailLength() == list.get(i+j).getTailLength() && j+i<list.size()){ // Ifall alla hundar har lika lång svans
-					j++; // j är antalet hunder med svanslängd x
+				if (i+2<list.size()){ // Så att man inte går utanför
+					while (list.get(i).getTailLength() == list.get(i+j+1).getTailLength() && j+i<list.size()-2){ // Ifall alla hundar har lika lång svans
+						j++; // j är antalet hunder med svanslängd x
+					}
 				}
-				for (int k = i;k<i+j;k++){
+				for (int k = i+1;k<i+j+1;k++){
 					// Välj hund som ska flyttas
 					Dog dog = list.get(k);
 					int l = k-1;
@@ -453,7 +458,7 @@ public class Methods {
 					}
 					list.set(l+1,dog);	
 				}
-				i = i + j; // Hoppa över redan sorterade hundar
+				//i = i + j; // Hoppa över redan sorterade hundar
 			}
 			i++;
 		}
