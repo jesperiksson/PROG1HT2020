@@ -6,8 +6,8 @@ public class Main{
 
 	public static void main(String[] args){
 	    System.out.println("Made by Jesper Eriksson");
-        Methods methods = new Methods(); 
-        methods.programLoop();	    
+        RunProgram runProgram = new RunProgram(); 
+        runProgram.programLoop();	    
 
     }
 }
