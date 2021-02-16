@@ -2,7 +2,7 @@
 
 
 import java.util.*;
-public class RunProgram {
+public class ProgramRunner {
 	private Scanner scanner = new Scanner(System.in);
 	private ArrayList<Dog> dogs = new ArrayList<Dog>();
 	private ArrayList<Owner> owners = new ArrayList<Owner>();
@@ -86,7 +86,7 @@ public class RunProgram {
 	    System.out.println("[13] close auction\n[0] exit");
 	}
 	//############# REGISTRATION METHODS ##########
-	public void registerNewDog(){
+	private void registerNewDog(){
 		String name = input.promptName("\nName", scanner);
 		String breed = input.prompt("Breed", scanner);
 		int age = input.convertToInt(input.prompt("Age", scanner));
@@ -96,19 +96,19 @@ public class RunProgram {
 		System.out.println(dog);
 		addDog(dog);
 		}
-	public void addDog(Dog d) {
+	private void addDog(Dog d) {
 		dogs.add(d);
 	}
-	public void registerNewOwner(){
+	private void registerNewOwner(){
 		String name = input.promptName("Name",scanner);
 		Owner owner = new Owner(name);
 		System.out.println(String.format("%s added to the register",name));
 		addOwner(owner);
 	}
-	public void addOwner(Owner o) {
+	private void addOwner(Owner o) {
 		owners.add(o);
 	}
-	public void giveDog(){
+	private void giveDog(){
 		Dog dog = findDog();
 		if (dog.getHasOwner()){
 			alreadyHasOwner();
@@ -121,7 +121,7 @@ public class RunProgram {
 			}
 		}
 	}
-	public void giveDog(Dog dog, Owner owner){	
+	private void giveDog(Dog dog, Owner owner){	
 		giveDogTwo(dog,owner);
 	}
 	private void giveDogTwo(Dog dog, Owner owner){
@@ -130,7 +130,7 @@ public class RunProgram {
 		removeAuction(dog);
 		System.out.println(String.format("%s now owns %s",owner.getName(),dog.getName()));
 	}
-	public void startAuction(){
+	private void startAuction(){
 		Dog dog = findDog();
 		if (dog != null){
     		if (checkIfDogInAuction(dog)){
@@ -147,7 +147,7 @@ public class RunProgram {
 		    System.out.print(" ");
 		}
 	}
-	public void makeBid(){
+	private void makeBid(){
 		int allowedAttempts = 10;
 		Owner user = findOwner();
 		if (user==null){
@@ -182,10 +182,10 @@ public class RunProgram {
 	private void dogIsNotSold(Dog dog){
 		System.out.println(String.format("No bids were made for ",dog.getName()));
 	}
-	public String waitForUserInput() {
-		return input.waitForEnter(scanner);
-	}
-	public void increaseAge() {
+	//private String waitForUserInput() {
+	//	return input.waitForEnter(scanner);
+	//}
+	private void increaseAge() {
 		Dog dog = findDog();
 		if (dog != null){
     		dog.increaseAge();
@@ -193,7 +193,7 @@ public class RunProgram {
         } 
 	}
 	// ############ LIST METHODS ##########	
-	public void listDogs(){
+	private void listDogs(){
 	    sortDogs();
 	    sortDogs();
 		boolean atLeastOne = false;
@@ -217,7 +217,7 @@ public class RunProgram {
 			System.out.println("Error: No dogs in list");
 		}
 	}
-	public void listOwners(){
+	private void listOwners(){
 		if (owners.size()>0){
 			for (int i = 0; i<owners.size();i++){
 				System.out.print(String.format("%s owns ",owners.get(i)));
@@ -251,7 +251,7 @@ public class RunProgram {
 		    System.out.print("no owner)\n");
 	    }
 	}
-	public void listBids(){// Anropas från user, alla bud
+	private void listBids(){// Anropas från user, alla bud
 		Dog dog = findDog();
 		Auction auction = findAuction(dog);
 		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
@@ -267,7 +267,7 @@ public class RunProgram {
 			}
 		}
 	}
-	public void listBids(Dog dog){ // Anropas från listAuction, 3 bud
+	private void listBids(Dog dog){ // Anropas från listAuction, 3 bud
 	    int numBids = 3;
 		Auction auction = findAuction(dog);
 		ArrayList<Owner> alreadyDisplayed = new ArrayList<Owner>(0);
@@ -287,7 +287,7 @@ public class RunProgram {
 			i--;
 		}
 	}
-	public void listAuctions(){
+	private void listAuctions(){
 		if (auctions.size()>0){
 			for (int i = 0; i<auctions.size(); i++){
 				System.out.println(String.format("Auction #%d: ",auctions.get(i).getSerialNumber()));
@@ -308,11 +308,11 @@ public class RunProgram {
 		noSuchDog(name); // Ger användare en chans till	
 		return null;
 	}
-	public Owner findOwner() {// Manuell inmatning
+	private Owner findOwner() {// Manuell inmatning
 		String name = input.promptName("Enter the name of the owner",scanner);
 		return findOwnerTwo(name);
 	}
-	public Owner findOwner(String name){//Automatisk inmatning
+	private Owner findOwner(String name){//Automatisk inmatning
 		return findOwnerTwo(name);
 	}
 	private Owner findOwnerTwo(String name){
@@ -332,7 +332,7 @@ public class RunProgram {
 		}
 		return false;
 	}
-	public Auction findAuction(Dog dog){
+	private Auction findAuction(Dog dog){
 		for (int i = 0;i<auctions.size();i++){
 			if (auctions.get(i).getDogForSale()==dog){
 				return auctions.get(i);
@@ -341,15 +341,15 @@ public class RunProgram {
 		System.out.println(String.format("Error: Auction for %s doesn't exist",dog.getName()));
 		return null;
 	}
-	//public Collection<Owner> getOwners() {
+	//private Collection<Owner> getOwners() {
 	//	return owners;
 	//}
 	// ########## REMOVE METHODS ############
-	public void removeDog(){
+	private void removeDog(){
 		String name = input.promptName("Enter the name of the dog to remove",scanner);
 		removeDogTwo(name);
 	}
-	public void removeDog(String name){
+	private void removeDog(String name){
 		removeDogTwo(name);
 	}
 	private void removeDogTwo(String name){
@@ -373,11 +373,11 @@ public class RunProgram {
 		}
 		noSuchDog(name);
 	}
-	public void removeOwner(){
+	private void removeOwner(){
 		String name = input.promptName("Enter the name of the owner",scanner);
 		removeOwnerTwo(name);
 	}
-	public void removeOwner(String name){
+	private void removeOwner(String name){
 		removeOwnerTwo(name);
 	} 
 	private void removeOwnerTwo(String name){
@@ -411,11 +411,11 @@ public class RunProgram {
 			}
 		}
 	}
-	public void closeAuction(){
+	private void closeAuction(){
 		Dog dog = findDog();
 		closeAuctionTwo(dog);
 	}
-	public void closeAuction(Dog dog){
+	private void closeAuction(Dog dog){
 		closeAuctionTwo(dog);
 	}
 	private void closeAuctionTwo(Dog dog){
@@ -443,7 +443,7 @@ public class RunProgram {
 	}
 	// ########## SORTING METHODS ###########
 	// InsertionSort, informationen hittade jag här: https://www.geeksforgeeks.org/insertion-sort/
-	public void sortDogs(){
+	private void sortDogs(){
 		ArrayList<Dog> sortedDogs = new ArrayList<>(dogs);
 		for (int i = 1; i<sortedDogs.size(); i++) {
 			// Välj den hund som ska flyttas
